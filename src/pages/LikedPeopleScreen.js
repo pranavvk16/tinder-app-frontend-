@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image, Dimensions, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, SafeAreaView, useWindowDimensions } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { getLikedPeople } from '../services/api';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
-const { width } = Dimensions.get('window');
-
 const LikedPeopleScreen = () => {
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const cardWidth = Math.min(screenWidth * 0.93, 430);
+  const cardHeight = Math.min(screenHeight * 0.68, screenWidth * 1.05);
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['likedPeople'],
     queryFn: getLikedPeople,
@@ -38,7 +40,7 @@ const LikedPeopleScreen = () => {
   }
 
   const renderItem = ({ item }) => (
-    <View style={styles.card}>
+    <View style={[styles.card, { width: cardWidth, height: cardHeight }]}>
       <Image source={{ uri: item.pictures[0] }} style={styles.cardImage} />
       <LinearGradient
         colors={['transparent', 'rgba(0,0,0,0.85)']}
@@ -94,8 +96,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   card: {
-    width: Math.min(width * 0.93, 410),
-    height: width * 1.1,
     backgroundColor: '#fff',
     borderRadius: 16,
     shadowColor: '#000',

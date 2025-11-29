@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, SafeAreaView, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const AccountScreen = () => {
   // Placeholder data for a static account section
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const user = {
     name: "Ethan Wells",
     age: 30,
@@ -17,7 +18,7 @@ const AccountScreen = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.hero}>
+        <View style={[styles.hero, { height: Math.min(Math.max(screenHeight * 0.35, 220), 340) }]}>
           <Image source={{ uri: user.profilePicture }} style={styles.heroImage} />
           <LinearGradient colors={['transparent', 'rgba(0,0,0,0.55)']} style={styles.heroOverlay} />
           <View style={styles.heroContent}>
@@ -35,12 +36,12 @@ const AccountScreen = () => {
           </View>
         </View>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { width: Math.min(screenWidth * 0.92, 520) }]}>
           <Text style={styles.sectionTitle}>About</Text>
           <Text style={styles.bioText}>{user.bio}</Text>
         </View>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { width: Math.min(screenWidth * 0.92, 520) }]}>
           <Text style={styles.sectionTitle}>Passions</Text>
           <View style={styles.chipRow}>
             {user.passions.map((tag) => (
@@ -51,7 +52,7 @@ const AccountScreen = () => {
           </View>
         </View>
 
-        <View style={styles.actionRow}>
+        <View style={[styles.actionRow, { width: Math.min(screenWidth * 0.92, 520) }]}>
           <TouchableOpacity style={[styles.actionBtn, styles.editBtn]}>
             <Ionicons name="create-outline" size={18} color="#fd2d55" />
             <Text style={styles.actionText}>Edit Profile</Text>

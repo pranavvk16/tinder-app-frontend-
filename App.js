@@ -39,7 +39,7 @@ function MainTabNavigator() {
         headerShown: false, // Hide header for tab screens
       })}
     >
-      <Tab.Screen name="MainTab" component={MainScreen} options={{ title: 'Home', headerShown: false }} />
+      <Tab.Screen name="MainTab" component={MainScreen} options={{ title: 'Tinder', headerShown: false }} />
       <Tab.Screen name="LikedTab" component={LikedPeopleScreen} options={{ title: 'Liked' }} />
       <Tab.Screen name="AccountTab" component={AccountScreen} options={{ title: 'Account' }} />
     </Tab.Navigator>
