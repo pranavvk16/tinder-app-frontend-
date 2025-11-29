@@ -20,10 +20,4 @@ React Native/Expo Tinder-like dating app.
 - `src/services/api.js`: Axios API client
 - `assets/`: Icons, splash
 
-Ignore .env in git.
 
-Only create/update README.md with concise, accurate info based on project. No other changes.
-
-Use attempt_completion with summary: "README.md created with project overview, setup, and structure."
-
-Instructions supersede general code mode.
