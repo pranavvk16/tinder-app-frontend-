@@ -8,7 +8,7 @@ const SplashScreen = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('Home'); // Navigate to Main tab navigator and remove SplashScreen from stack
-    }, 3000); // 3-second delay
+    }, 1000); // 3-second delay
 
     return () => clearTimeout(timer); // Clear timeout if component unmounts
   }, [navigation]);
@@ -16,7 +16,7 @@ const SplashScreen = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../assets/splash-icon.png')} // Adjust path as needed
+        source={require('../../assets/tinder.png')}
         style={styles.logo}
       />
       <Text style={styles.title}>Tinder App</Text>

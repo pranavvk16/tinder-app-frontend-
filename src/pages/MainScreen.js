@@ -11,7 +11,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getRecommendedPeople, likePerson, dislikePerson } from '../services/api';
@@ -23,6 +23,7 @@ const MainScreen = () => {
   const navigation = useNavigation();
   const queryClient = useQueryClient();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [history, setHistory] = useState([]);
 
   const position = useRef(new Animated.ValueXY()).current;
   const panResponder = useRef(
@@ -91,6 +92,7 @@ const MainScreen = () => {
         dislikeMutation.mutate(currentPerson.id);
       }
     }
+    setHistory((prev) => [...prev, currentIndex]);
     position.setValue({ x: 0, y: 0 }); // Reset position for next card
     setCurrentIndex((prevIndex) => prevIndex + 1);
   };
@@ -100,6 +102,16 @@ const MainScreen = () => {
       toValue: { x: 0, y: 0 },
       useNativeDriver: true,
     }).start();
+  };
+
+  const handleRewind = () => {
+    setHistory((prev) => {
+      if (!prev.length) return prev;
+      const newHistory = prev.slice(0, -1);
+      setCurrentIndex(Math.max(currentIndex - 1, 0));
+      position.setValue({ x: 0, y: 0 });
+      return newHistory;
+    });
   };
 
   const getCardStyle = () => {
@@ -240,7 +252,7 @@ const MainScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image source={require('../../assets/icon.png')} style={styles.headerLogo} />
+          <Image source={require('../../assets/tinder.png')} style={styles.headerLogo} />
         </View>
 
         <View style={styles.cardStack}>
@@ -248,11 +260,11 @@ const MainScreen = () => {
         </View>
 
         <View style={styles.actions}>
+          <TouchableOpacity style={[styles.actionButton, styles.rewindButton]} onPress={handleRewind} disabled={!history.length}>
+            <Ionicons name="refresh" size={26} color={history.length ? '#ffae42' : '#d6d6d6'} />
+          </TouchableOpacity>
           <TouchableOpacity style={[styles.actionButton, styles.nopeButton]} onPress={() => forceSwipe('left')}>
             <Ionicons name="close" size={32} color="#FD2D55" />
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, styles.infoButton]}>
-            <Ionicons name="star" size={26} color="#f7b529" />
           </TouchableOpacity>
           <TouchableOpacity style={[styles.actionButton, styles.likeButton]} onPress={() => forceSwipe('right')}>
             <Ionicons name="heart" size={32} color="#2dd36f" />
@@ -307,10 +319,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   card: {
-    width: Math.min(width * 0.93, 410),
+    width: '100%',
+    // marginI: 10,
     height: height * 0.72,
     backgroundColor: '#fff',
     borderRadius: 16,
+    alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.18,
@@ -379,34 +393,38 @@ const styles = StyleSheet.create({
   },
   likeBox: {
     position: 'absolute',
-    top: 28,
-    left: 24,
+    top: -470,
+    left: 12,
     borderColor: '#2dd36f',
     borderWidth: 4,
     paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingHorizontal: 18,
     borderRadius: 8,
-    transform: [{ rotate: '-18deg' }],
+    transform: [{ rotate: '-16deg' }],
+    zIndex: 3,
+    pointerEvents: 'none',
     },
   likeText: {
     color: '#2dd36f',
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: 'bold',
   },
   nopeBox: {
     position: 'absolute',
-    top: 28,
-    right: 24,
+    top: -500,
+    right: 1,
     borderColor: '#fd2d55',
     borderWidth: 4,
     paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingHorizontal: 18,
     borderRadius: 8,
-    transform: [{ rotate: '18deg' }],
+    transform: [{ rotate: '16deg' }],
+    zIndex: 3,
+    pointerEvents: 'none',
   },
   nopeText: {
     color: '#fd2d55',
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: 'bold',
   },
   actions: {
@@ -416,7 +434,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 26,
     zIndex: 1,
-    columnGap: 14,
+    columnGap: 16,
   },
   actionButton: {
     width: 68,
@@ -430,15 +448,15 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
     elevation: 4,
   },
+  rewindButton: {
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#ffeccf',
+  },
   nopeButton: {
     backgroundColor: '#fff',
     borderWidth: 2,
     borderColor: '#ffe1e7',
-  },
-  infoButton: {
-    backgroundColor: '#fff',
-    borderWidth: 2,
-    borderColor: '#f8eac6',
   },
   likeButton: {
     backgroundColor: '#fff',
